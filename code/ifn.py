@@ -98,6 +98,25 @@ def get_S_s_F0(F0_ref, df, UPPER_CAP=100, LOWER_CAP=0.00001):
             grouped_df_neu[speaker] = F0_ref/speaker_mean
 
     return grouped_df_neu
+
+def get_S_s_F0_global(F0_ref, df, UPPER_CAP=100, LOWER_CAP=0.00001):
+    print('Entered')
+    df_neu = df
+    speakers = df['speaker'].unique()
+    grouped_df_neu = {}
+    UPPER_CAP = 100
+    LOWER_CAP = 0.00001
+    for speaker in speakers:
+        speaker_df_neu = df_neu[df_neu['speaker']==speaker]
+        speaker_mean = (speaker_df_neu['F0_contour_sum']/speaker_df_neu['F0_contour_length']).mean()
+        if F0_ref/speaker_mean > UPPER_CAP:
+            grouped_df_neu[speaker] = UPPER_CAP
+        elif F0_ref/speaker_mean < LOWER_CAP:
+            grouped_df_neu[speaker] = LOWER_CAP
+        else:
+            grouped_df_neu[speaker] = F0_ref/speaker_mean
+
+    return grouped_df_neu
     
     
 def get_normalised_df(df, avg_F0_ref, get_S_s_F0, UPPER_CAP=100, LOWER_CAP=0.00001):
